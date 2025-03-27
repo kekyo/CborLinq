@@ -87,8 +87,9 @@ The model types are:
 
 CborLinq does not use null objects for `null` value.
 
-When deserializing from cbor data, null nodes become `null` value explicitly.
-When serializing `null` value, they are output as null nodes.
+When deserializing from CBOR data, null nodes become `null` value explicitly.
+Therefore, you can use `CNullValue` (Null-object pattern object) instead of.
+When serializing `CNullValue` value, they are output as null nodes.
 
 ### Deserialize and serialize
 
@@ -186,7 +187,9 @@ As already mentioned, a null node is `null` value itself.
 
 ```csharp
 // Root node is null
-if (cn == null)
+// Note: CborLinq does not generate CNullValue on deserialization.
+//       Therefore, it can only be used to simplify our code.
+if (cn == null || cn is CNullValue)
 {
     Console.WriteLine("Node is null.")
 }
@@ -246,6 +249,20 @@ CObject co2 = new(dict);
 
 ----
 
+## TODO
+
+* Serialize and deserialize any class/struct/records.
+* Implements own CBOR parser/writer and removed reference for `System.Formats.Cbor.`
+  * It will make asynchronous operation perfectly.
+* Attachable `Newtonsoft.Json.Linq.JToken` reader/writer (We can use CBOR with `JToken` directly).
+* NPM package on JavaScript/TypeScript platforms.
+
 ## License
 
 Apache-v2.
+
+## History
+
+* 0.1.0:
+  * Initial release.
+
